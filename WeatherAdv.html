@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Weather Forecast Advanced</title>
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        function weather(search) {
+            $.get("http://api.openweathermap.org/data/2.5/weather?q=" +
+            search + "&appid=72ea2b1e50747afd827171f5a46d6b15", function(res) {
+                var name = res.name;
+                var temp = (((9/5) * (res.main.temp - 273.15)) + 32).toFixed(2);
+                document.getElementById("name").innerHTML = "<p><b>City:</b> " + name + "</p>";
+                document.getElementById("temp").innerHTML = "<p><b>Temperature: </b> "
+                    + temp + " °F</p>";
+                localStorage.weather = search;
+                //localStorage.clear();
+            }, "json")
+            .fail(function() {
+                $("#name").text("");
+                $("#temp").text("");
+                document.getElementById("name").innerHTML = "<h3>Error. City cannot be found.</h3>";
+            });
+            return false;
+        }
+
+        $(document).ready(function() {
+            $("form").submit(function() {
+                weather($("#input").val());
+                return false;
+            });
+
+            if (localStorage.weather) {
+                weather(localStorage.weather);
+                return false;
+            }
+            else {
+                document.getElementById("name").innerHTML = "<p>Welcome to the Weather Forecast App!</p>" +
+                "<p>Search for a city of your choice by typing it on the search bar above, then " + 
+                "click on the search button to have the web page display the city's weather!</p>";
+            }
+        });
+    </script>
+    <style>
+        #wrapper {
+            margin-left: 35%;
+        }
+        #result {
+            margin-top: 25px;
+            width: 400px;
+        }
+        p {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id = "wrapper">
+        <h1>Weather Forecast Redux</h1>
+        <form>
+            <input type = "text" id = "input" placeholder = "Type your city here" />
+            <input type = "submit" value = "Search"/>
+        </form>
+        <div id = "result">
+            <span id = "name"></span>
+            <span id = "temp"></span>
+        </div>
+    </div>
+</body>
+</html>

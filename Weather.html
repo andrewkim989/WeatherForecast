@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Weather Forecast</title>
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("form").submit(function() {
+                $.get("http://api.openweathermap.org/data/2.5/weather?q=" +
+                $("#input").val() + "&appid=72ea2b1e50747afd827171f5a46d6b15", function(res) {
+                    var name = res.name;
+                    var temp = (((9/5) * (res.main.temp - 273.15)) + 32).toFixed(2);
+                    document.getElementById("name").innerHTML = "<p><b>City:</b> " + name + "</p>";
+                    document.getElementById("temp").innerHTML = "<p><b>Temperature: </b> "
+                        + temp + " °F</p>";
+                }, "json")
+                .fail(function() {
+                    $("#name").text("");
+                    $("#temp").text("");
+                    document.getElementById("name").innerHTML = "<h3>Error. City cannot be found.</h3>";
+                })
+                return false;
+            });
+        });
+    </script>
+    <style>
+        #wrapper {
+            margin-left: 35%;
+        }
+        #result {
+            margin-top: 25px;
+        }
+        p {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id = "wrapper">
+        <h1>Weather Forecast</h1>
+        <h3>Search for a weather of the city of your choice.</h3>
+        <form>
+            <input type = "text" id = "input"/>
+            <input type = "submit" value = "Search"/>
+        </form>
+        <div id = "result">
+            <span id = "name"></span>
+            <span id = "temp"></span>
+        </div>
+    </div>
+</body>
+</html>
